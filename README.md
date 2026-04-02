@@ -2,7 +2,12 @@
 
 One-command ComfyUI setup for FLUX.1-dev on Google Colab, with the Flux Super Realism LoRA pre-loaded.
 
-Run this in your Colab terminal (on desktop look at bottom left):
+## Getting Started with Google Colab
+
+1. **Enable the T4 GPU:** Go to **Runtime** → **Change runtime type**, select **T4 GPU** under Hardware accelerator, and click **Save**.
+2. **Open the terminal:** Look at the bottom left of your screen on desktop.
+
+Run this command in the terminal:
 
 ```bash
 bash <(wget -qO- https://raw.githubusercontent.com/uzairdeveloper223/flux-studio/main/install.sh)
