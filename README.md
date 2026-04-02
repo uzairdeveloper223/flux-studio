@@ -4,8 +4,9 @@ One-command ComfyUI setup for FLUX.1-dev on Google Colab, with the Flux Super Re
 
 ## Getting Started with Google Colab
 
-1. **Enable the T4 GPU:** Go to **Runtime** → **Change runtime type**, select **T4 GPU** under Hardware accelerator, and click **Save**.
-2. **Open the terminal:** Look at the bottom left of your screen on desktop.
+1. **Go to Colab:** Open [colab.research.google.com](https://colab.research.google.com/) and create a new notebook.
+2. **Enable the T4 GPU:** Go to **Runtime** → **Change runtime type**, select **T4 GPU** under Hardware accelerator, and click **Save**.
+3. **Open the terminal:** Look at the bottom left of your screen on desktop.
 
 Run this command in the terminal:
 
