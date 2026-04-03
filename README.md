@@ -14,6 +14,8 @@ The easiest way to run Flux Studio is to use the pre-configured Colab notebook. 
 <summary><b>Kaggle (Click to expand)</b></summary>
 <br>
 
+> **Warning:** Kaggle's automated systems are incredibly aggressive against UI tunneling. Even with anti-idle scripts, Kaggle will often abruptly kill your session completely immediately after you open the Cloudflare URL. Countless bypass methods have been tested and none reliably work. Use Google Colab instead if possible!
+
 1. Open [kaggle.com/code](https://www.kaggle.com/code) and create a new notebook.
 2. **Enable GPU:** Go to **Settings** → **Accelerator** → select **GPU T4x2**.
 3. **Enable Internet:** Toggle **Internet** to **ON** in the settings.
@@ -89,7 +91,7 @@ flux-studio/
 
 - Generation at 768x1024 takes roughly 30-60 seconds per image on a T4.
 - Models are ~14 GB total. On a fresh session they must be re-downloaded, which takes a few minutes.
-- Sessions idle-disconnect after about 90 minutes of inactivity (Colab) or when quota runs out (Kaggle).
+- Sessions idle-disconnect after about 90 minutes of inactivity (Colab). On Kaggle, sessions are often instantly killed by their aggressive anti-tunneling bots as soon as the Cloudflare link is opened.
 
 ## Author
 
