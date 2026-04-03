@@ -115,7 +115,7 @@ _ERROR_PATTERNS: tuple[str, ...] = (
 )
 
 _STARTUP_COMPLETE = "[ComfyUI-Manager] All startup tasks have been completed."
-_TUNNEL_URL_RE = re.compile(r"https://[a-zA-Z0-9\-]+\.trycloudflare\.com")
+_TUNNEL_URL_RE = re.compile(r"http[s]?://[a-zA-Z0-9\-]+\.pinggy\.link")
 
 
 def _say(msg: str) -> None:
@@ -252,24 +252,15 @@ def _install_workflows(script_dir: Path) -> None:
             _say(f"warning: {src_name} not found, skipping")
 
 
-def _install_cloudflared() -> None:
-    cf_bin = Path("/tmp/cloudflared")
-    if shutil.which("cloudflared") or cf_bin.exists():
-        return
-    _say("installing cloudflared ...")
-    subprocess.run(
-        f'wget -q -O {cf_bin} '
-        'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64',
-        shell=True, check=True,
-    )
-    cf_bin.chmod(0o755)
-    _say("cloudflared ready")
+def _install_pinggy_deps() -> None:
+    if not shutil.which("ssh"):
+        _say("installing ssh client ...")
+        subprocess.run("apt-get update && apt-get install -y openssh-client || mamba install openssh -y", shell=True, check=True)
 
 
 def _start_tunnel() -> None:
-    cf_bin = "/tmp/cloudflared" if Path("/tmp/cloudflared").exists() else "cloudflared"
     cf = subprocess.Popen(
-        [cf_bin, "tunnel", "--url", f"http://127.0.0.1:{COMFYUI_PORT}"],
+        ["ssh", "-o", "StrictHostKeyChecking=no", "-p", "80", "-R0:localhost:" + str(COMFYUI_PORT), "a.pinggy.io"],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         start_new_session=True,
@@ -299,7 +290,7 @@ def _keep_alive() -> None:
     import time
     while True:
         print(".", end="", flush=True)
-        time.sleep(20)
+        time.sleep(5)
 
 
 def _launch_comfyui(gpu_ids: list[int]) -> None:
@@ -389,7 +380,7 @@ def main() -> None:
     _install_workflows(Path(__file__).parent.resolve())
 
     _say("\nstep 5/5  launching")
-    _install_cloudflared()
+    _install_pinggy_deps()
     _say("loading models into GPU memory — this takes a minute ...\n")
     _launch_comfyui(gpu_ids)
 

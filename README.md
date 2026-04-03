@@ -41,7 +41,7 @@ setInterval(keepAlive, 20000);
 
 </details>
 
-The script downloads the runner and workflow, then starts ComfyUI. A Cloudflare public URL is printed when the server is ready.
+The script downloads the runner and workflow, then starts ComfyUI. A Cloudflare (Colab) or Pinggy (Kaggle) public URL is printed when the server is ready.
 
 ## Gallery
 Here are some examples of what Flux Studio can generate right out of the box using the pre-loaded UltraRealistic LoRA. 
@@ -60,7 +60,7 @@ The runner script handles everything in sequence:
 2. Installs ComfyUI-Manager and ComfyUI-GGUF custom nodes
 3. Downloads the FLUX.1-dev GGUF model (~9 GB), T5-XXL encoder (~4 GB), CLIP-L, VAE, and the UltraRealistic Amateur V2 LoRA — skipping files already on disk
 4. Copies `workflow.json` into ComfyUI's workflow browser
-5. Starts a Cloudflare tunnel and prints the public URL
+5. Starts a Cloudflare or Pinggy tunnel and prints the public URL
 6. Launches ComfyUI
 
 The workflow uses a single LoRA (`UltraRealistic Amateur V2` by Danrisi) at 1.0 strength. Start prompts with `Low-resolution, amateur photo shot on digital camera, no visible jpeg artifacts, slightly noisy` to activate it.
@@ -91,7 +91,7 @@ flux-studio/
 
 - Generation at 768x1024 takes roughly 30-60 seconds per image on a T4.
 - Models are ~14 GB total. On a fresh session they must be re-downloaded, which takes a few minutes.
-- Sessions idle-disconnect after about 90 minutes of inactivity (Colab). On Kaggle, sessions are often instantly killed by their aggressive anti-tunneling bots as soon as the Cloudflare link is opened.
+- Sessions idle-disconnect after about 90 minutes of inactivity (Colab). On Kaggle, the connection uses Pinggy to evade Kaggle's Cloudflare ban, but you must keep the tab open.
 
 ## Author
 
