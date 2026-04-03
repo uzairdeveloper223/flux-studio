@@ -6,7 +6,7 @@ readonly REPO="uzairdeveloper223/flux-studio"
 readonly RAW_BASE="https://raw.githubusercontent.com/${REPO}/main"
 
 _detect_platform() {
-    if [[ -d "/kaggle" ]]; then
+    if [[ -d "/kaggle/working" ]]; then
         printf 'kaggle'
     elif [[ -d "/content" ]]; then
         printf 'colab'
@@ -39,8 +39,8 @@ mkdir -p "${DEST_DIR}"
 
 printf 'platform: %s\n' "${PLATFORM}"
 printf 'downloading flux-studio ...\n'
-wget -q -O "${DEST_DIR}/run_comfyui.py" "${RAW_BASE}/${SCRIPT}"
+wget -q -O "${DEST_DIR}/${SCRIPT}" "${RAW_BASE}/${SCRIPT}"
 wget -q -O "${DEST_DIR}/workflow.json"   "${RAW_BASE}/workflow.json"
 
 printf 'starting ...\n'
-exec python3 "${DEST_DIR}/run_comfyui.py"
+exec python3 "${DEST_DIR}/${SCRIPT}"
