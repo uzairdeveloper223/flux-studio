@@ -3,9 +3,11 @@
 import os
 import re
 import sys
+import signal
 import shutil
 import subprocess
 import threading
+import time
 from pathlib import Path
 
 
@@ -121,14 +123,19 @@ def _say(msg: str) -> None:
 
 
 def _run_silent(cmd: str | list[str], cwd: Path | None = None, fatal: bool = True) -> None:
-    subprocess.run(
+    proc = subprocess.Popen(
         cmd,
         shell=isinstance(cmd, str),
         cwd=cwd,
-        check=fatal,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )
+    while proc.poll() is None:
+        print(".", end="", flush=True)
+        time.sleep(3)
+    print(flush=True)
+    if fatal and proc.returncode != 0:
+        raise subprocess.CalledProcessError(proc.returncode, cmd)
 
 
 def _download(url: str, dest_dir: Path, filename: str | None = None) -> None:
@@ -246,19 +253,23 @@ def _install_workflows(script_dir: Path) -> None:
 
 
 def _install_cloudflared() -> None:
-    if shutil.which("cloudflared"):
+    cf_bin = Path("/tmp/cloudflared")
+    if shutil.which("cloudflared") or cf_bin.exists():
         return
     _say("installing cloudflared ...")
-    _download(
-        "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb",
-        Path("/tmp"),
+    subprocess.run(
+        f'wget -q -O {cf_bin} '
+        'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64',
+        shell=True, check=True,
     )
-    _run_silent("dpkg -i /tmp/cloudflared-linux-amd64.deb")
+    cf_bin.chmod(0o755)
+    _say("cloudflared ready")
 
 
 def _start_tunnel() -> None:
+    cf_bin = "/tmp/cloudflared" if Path("/tmp/cloudflared").exists() else "cloudflared"
     cf = subprocess.Popen(
-        ["cloudflared", "tunnel", "--url", f"http://127.0.0.1:{COMFYUI_PORT}"],
+        [cf_bin, "tunnel", "--url", f"http://127.0.0.1:{COMFYUI_PORT}"],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
     )
@@ -344,6 +355,8 @@ def _launch_comfyui(gpu_ids: list[int]) -> None:
 
 
 def main() -> None:
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
+
     print()
     _say("=== ComfyUI + FLUX Super Realism (Kaggle) ===\n")
 

@@ -20,8 +20,16 @@ One-command ComfyUI setup for FLUX.1-dev on Google Colab and Kaggle, with the Fl
 
 ### The command
 
+**In a Colab terminal** (bash):
+
 ```bash
 bash <(wget -qO- https://raw.githubusercontent.com/uzairdeveloper223/flux-studio/main/install.sh)
+```
+
+**In a Kaggle notebook cell** (prefix with `!`):
+
+```python
+!bash <(wget -qO- https://raw.githubusercontent.com/uzairdeveloper223/flux-studio/main/install.sh)
 ```
 
 The script downloads the runner and workflow, then starts ComfyUI. A Cloudflare public URL is printed when the server is ready.
