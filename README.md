@@ -41,6 +41,15 @@ setInterval(() => {
 
 The script downloads the runner and workflow, then starts ComfyUI. A Cloudflare public URL is printed when the server is ready.
 
+## Gallery
+Here are some examples of what Flux Studio can generate right out of the box using the pre-loaded UltraRealistic LoRA. 
+
+![IMAGE 1](assets/ComfyUI_00001_.png)
+
+![IMAGE 2](assets/ComfyUI_00002_.png)
+
+![IMAGE 3](assets/ComfyUI_00003_.png)
+
 ## How it works
 
 The runner script handles everything in sequence:
