@@ -272,6 +272,7 @@ def _start_tunnel() -> None:
         [cf_bin, "tunnel", "--url", f"http://127.0.0.1:{COMFYUI_PORT}"],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
+        start_new_session=True,
     )
     for raw in cf.stdout:
         m = _TUNNEL_URL_RE.search(raw.decode("utf-8", errors="replace"))
@@ -282,7 +283,7 @@ def _start_tunnel() -> None:
             print(f"  workflow     Browse Workflows -> flux_super_realism")
             print(f"  output       {WORKSPACE / 'output' }/")
             print(f"  {'─' * 56}")
-            print("  Ctrl+C to stop.\n")
+            print("  stop the session manually when done.\n")
             return
 
 
@@ -308,50 +309,47 @@ def _launch_comfyui(gpu_ids: list[int]) -> None:
         text=True,
         bufsize=1,
         env=env,
+        start_new_session=True,
     )
 
     in_fetch = False
     tunnel_started = False
 
-    try:
-        for raw_line in proc.stdout:
-            line = raw_line.rstrip()
+    for raw_line in proc.stdout:
+        line = raw_line.rstrip()
 
-            if "FETCH ComfyRegistry Data:" in line:
-                m = re.search(r"(\d+)/(\d+)", line)
-                if m:
-                    cur, total = int(m.group(1)), int(m.group(2))
-                    filled = int(28 * cur / total)
-                    bar = "█" * filled + "░" * (28 - filled)
-                    print(f"\r  plugins  [{bar}] {cur}/{total}", end="", flush=True)
-                    in_fetch = True
-                continue
+        if "FETCH ComfyRegistry Data:" in line:
+            m = re.search(r"(\d+)/(\d+)", line)
+            if m:
+                cur, total = int(m.group(1)), int(m.group(2))
+                filled = int(28 * cur / total)
+                bar = "█" * filled + "░" * (28 - filled)
+                print(f"\r  plugins  [{bar}] {cur}/{total}", end="", flush=True)
+                in_fetch = True
+            continue
 
-            if in_fetch:
-                print("  done", flush=True)
-                in_fetch = False
+        if in_fetch:
+            print("  done", flush=True)
+            in_fetch = False
 
-            if _STARTUP_COMPLETE in line:
-                _say("loaded")
-                if not tunnel_started:
-                    tunnel_started = True
-                    threading.Thread(target=_start_tunnel, daemon=True).start()
-                continue
+        if _STARTUP_COMPLETE in line:
+            _say("loaded")
+            if not tunnel_started:
+                tunnel_started = True
+                threading.Thread(target=_start_tunnel, daemon=True).start()
+            continue
 
-            if _is_error(line):
-                _say(f"error  {line}")
-                continue
+        if _is_error(line):
+            _say(f"error  {line}")
+            continue
 
-            if _is_suppressed(line):
-                continue
+        if _is_suppressed(line):
+            continue
 
-            if line.strip():
-                _say(line)
+        if line.strip():
+            _say(line)
 
-    except KeyboardInterrupt:
-        print("\n  stopped")
-    finally:
-        proc.terminate()
+    proc.wait()
 
 
 def main() -> None:
