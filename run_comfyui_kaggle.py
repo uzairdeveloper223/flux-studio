@@ -3,7 +3,6 @@
 import os
 import re
 import sys
-import signal
 import shutil
 import subprocess
 import threading
@@ -353,8 +352,6 @@ def _launch_comfyui(gpu_ids: list[int]) -> None:
 
 
 def main() -> None:
-    signal.signal(signal.SIGINT, signal.SIG_IGN)
-
     print()
     _say("=== ComfyUI + FLUX Super Realism (Kaggle) ===\n")
 
