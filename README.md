@@ -8,8 +8,7 @@ One-command ComfyUI setup for FLUX.1-dev on Google Colab and Kaggle, with the Ul
 
 1. **Go to Colab:** Open [colab.research.google.com](https://colab.research.google.com/) and create a new notebook.
 2. **Enable the T4 GPU:** Go to **Runtime** → **Change runtime type**, select **T4 GPU** under Hardware accelerator, and click **Save**.
-3. **Open the terminal:** Look at the bottom left of your screen on desktop.
-4. **Run the command** below in the terminal.
+3. **Add a code cell** and paste the command below, then run it.
 
 ### Kaggle
 
@@ -20,13 +19,7 @@ One-command ComfyUI setup for FLUX.1-dev on Google Colab and Kaggle, with the Ul
 
 ### The command
 
-**In a Colab terminal** (bash):
-
-```bash
-bash <(wget -qO- https://raw.githubusercontent.com/uzairdeveloper223/flux-studio/main/install.sh)
-```
-
-**In a Kaggle notebook cell** (prefix with `!`):
+Run this command in a **code cell**:
 
 ```python
 !bash <(wget -qO- https://raw.githubusercontent.com/uzairdeveloper223/flux-studio/main/install.sh)
