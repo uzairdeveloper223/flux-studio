@@ -42,13 +42,5 @@ printf 'downloading flux-studio ...\n'
 wget -q -O "${DEST_DIR}/${SCRIPT}" "${RAW_BASE}/${SCRIPT}"
 wget -q -O "${DEST_DIR}/workflow.json"   "${RAW_BASE}/workflow.json"
 
-if [[ "${PLATFORM}" == "kaggle" ]]; then
-    printf 'starting comfyui in background (tailing logs) ...\n'
-    readonly LOG_FILE="/kaggle/working/comfyui.log"
-    nohup python3 "${DEST_DIR}/${SCRIPT}" > "${LOG_FILE}" 2>&1 &
-    echo $! > /kaggle/working/comfyui.pid
-    tail -f "${LOG_FILE}"
-else
-    printf 'starting ...\n'
-    exec python3 "${DEST_DIR}/${SCRIPT}"
-fi
+printf 'starting ...\n'
+exec python3 "${DEST_DIR}/${SCRIPT}"

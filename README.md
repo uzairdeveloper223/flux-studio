@@ -10,7 +10,9 @@ The easiest way to run Flux Studio is to use the pre-configured Colab notebook. 
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/uzairdeveloper223/flux-studio/blob/main/flux-studio.ipynb)
 
-### Kaggle
+<details>
+<summary><b>Kaggle (Click to expand)</b></summary>
+<br>
 
 1. Open [kaggle.com/code](https://www.kaggle.com/code) and create a new notebook.
 2. **Enable GPU:** Go to **Settings** → **Accelerator** → select **GPU T4x2**.
@@ -20,6 +22,22 @@ The easiest way to run Flux Studio is to use the pre-configured Colab notebook. 
 ```python
 !bash <(wget -qO- https://raw.githubusercontent.com/uzairdeveloper223/flux-studio/main/install.sh)
 ```
+
+5. **Stop Kaggle from disconnecting you:** Kaggle will pause the notebook if you are inactive. To prevent this, open your browser's Developer Console (F12 or Ctrl+Shift+I) and paste this script to fake mouse movements:
+
+```javascript
+setInterval(() => {
+    window.dispatchEvent(new MouseEvent('mousemove', {
+        bubbles: true,
+        clientX: Math.random() * 100,
+        clientY: Math.random() * 100
+    }));
+}, 20000);
+```
+
+**Important:** Do not close the Kaggle tab while generating, or the server will stop!
+
+</details>
 
 The script downloads the runner and workflow, then starts ComfyUI. A Cloudflare public URL is printed when the server is ready.
 
