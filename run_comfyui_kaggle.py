@@ -115,6 +115,7 @@ _ERROR_PATTERNS: tuple[str, ...] = (
 )
 
 _STARTUP_COMPLETE = "[ComfyUI-Manager] All startup tasks have been completed."
+_TUNNEL_URL_RE = re.compile(r"https://[a-zA-Z0-9\-]+\.trycloudflare\.com")
 
 
 def _say(msg: str) -> None:
@@ -251,26 +252,34 @@ def _install_workflows(script_dir: Path) -> None:
             _say(f"warning: {src_name} not found, skipping")
 
 
-def _start_tunnel() -> None:
-    import urllib.request
-    try:
-        ip = urllib.request.urlopen("https://ipv4.icanhazip.com").read().decode("utf8").strip("\n")
-    except Exception:
-        ip = "unknown"
+def _install_cloudflared() -> None:
+    cf_bin = Path("/tmp/cloudflared")
+    if shutil.which("cloudflared") or cf_bin.exists():
+        return
+    _say("installing cloudflared ...")
+    subprocess.run(
+        f'wget -q -O {cf_bin} '
+        'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64',
+        shell=True, check=True,
+    )
+    cf_bin.chmod(0o755)
+    _say("cloudflared ready")
 
+
+def _start_tunnel() -> None:
+    cf_bin = "/tmp/cloudflared" if Path("/tmp/cloudflared").exists() else "cloudflared"
     cf = subprocess.Popen(
-        ["npx", "-y", "localtunnel", "--port", str(COMFYUI_PORT)],
+        [cf_bin, "tunnel", "--url", f"http://127.0.0.1:{COMFYUI_PORT}"],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         start_new_session=True,
     )
     for raw in cf.stdout:
-        line = raw.decode("utf-8", errors="replace").strip()
-        if line.startswith("your url is:"):
-            url = line.split("your url is:")[1].strip()
+        m = _TUNNEL_URL_RE.search(raw.decode("utf-8", errors="replace"))
+        if m:
+            url = m.group(0)
             print(f"\n\n  {'─' * 56}")
             print(f"  ready        {url}")
-            print(f"  password     {ip} (enter this when asked)")
             print(f"  workflow     Browse Workflows -> flux_ultra_realistic")
             print(f"  output       {WORKSPACE / 'output' }/")
             print(f"  {'─' * 56}")
@@ -293,7 +302,7 @@ def _launch_comfyui(gpu_ids: list[int]) -> None:
         _say(f"detected {len(gpu_ids)} GPUs — pinning ComfyUI to GPU 0")
 
     proc = subprocess.Popen(
-        [sys.executable, "main.py", "--dont-print-server", "--highvram"],
+        [sys.executable, "main.py", "--dont-print-server", "--listen", "--highvram"],
         cwd=str(WORKSPACE),
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
@@ -372,6 +381,7 @@ def main() -> None:
     _install_workflows(Path(__file__).parent.resolve())
 
     _say("\nstep 5/5  launching")
+    _install_cloudflared()
     _say("loading models into GPU memory — this takes a minute ...\n")
     _launch_comfyui(gpu_ids)
 

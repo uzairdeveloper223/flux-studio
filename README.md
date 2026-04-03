@@ -21,7 +21,7 @@ The easiest way to run Flux Studio is to use the pre-configured Colab notebook. 
 !bash <(wget -qO- https://raw.githubusercontent.com/uzairdeveloper223/flux-studio/main/install.sh)
 ```
 
-The script downloads the runner and workflow, then starts ComfyUI. A `loca.lt` URL and an Endpoint IP password are printed when the server is ready.
+The script downloads the runner and workflow, then starts ComfyUI. A Cloudflare public URL is printed when the server is ready.
 
 ## How it works
 
@@ -31,7 +31,7 @@ The runner script handles everything in sequence:
 2. Installs ComfyUI-Manager and ComfyUI-GGUF custom nodes
 3. Downloads the FLUX.1-dev GGUF model (~9 GB), T5-XXL encoder (~4 GB), CLIP-L, VAE, and the UltraRealistic Amateur V2 LoRA — skipping files already on disk
 4. Copies `workflow.json` into ComfyUI's workflow browser
-5. Starts a localtunnel instance and prints the public URL and Endpoint IP password
+5. Starts a Cloudflare tunnel and prints the public URL
 6. Launches ComfyUI
 
 The workflow uses a single LoRA (`UltraRealistic Amateur V2` by Danrisi) at 1.0 strength. Start prompts with `Low-resolution, amateur photo shot on digital camera, no visible jpeg artifacts, slightly noisy` to activate it.
