@@ -295,6 +295,13 @@ def _is_error(line: str) -> bool:
     return any(pattern in line for pattern in _ERROR_PATTERNS)
 
 
+def _keep_alive() -> None:
+    import time
+    while True:
+        print(".", end="", flush=True)
+        time.sleep(20)
+
+
 def _launch_comfyui(gpu_ids: list[int]) -> None:
     env = os.environ.copy()
     if len(gpu_ids) > 1:
@@ -314,6 +321,7 @@ def _launch_comfyui(gpu_ids: list[int]) -> None:
 
     in_fetch = False
     tunnel_started = False
+    threading.Thread(target=_keep_alive, daemon=True).start()
 
     for raw_line in proc.stdout:
         line = raw_line.rstrip()

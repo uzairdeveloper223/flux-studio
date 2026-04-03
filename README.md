@@ -26,13 +26,13 @@ The easiest way to run Flux Studio is to use the pre-configured Colab notebook. 
 5. **Stop Kaggle from disconnecting you:** Kaggle will pause the notebook if you are inactive. To prevent this, open your browser's Developer Console (F12 or Ctrl+Shift+I) and paste this script to fake mouse movements:
 
 ```javascript
-setInterval(() => {
-    window.dispatchEvent(new MouseEvent('mousemove', {
-        bubbles: true,
-        clientX: Math.random() * 100,
-        clientY: Math.random() * 100
-    }));
-}, 20000);
+function keepAlive() {
+    console.log("Keeping Kaggle alive...");
+    let event = new KeyboardEvent('keydown', { key: 'Shift', code: 'ShiftLeft', bubbles: true });
+    document.body.dispatchEvent(event);
+    document.body.click();
+}
+setInterval(keepAlive, 20000);
 ```
 
 **Important:** Do not close the Kaggle tab while generating, or the server will stop!
