@@ -115,7 +115,7 @@ _ERROR_PATTERNS: tuple[str, ...] = (
 )
 
 _STARTUP_COMPLETE = "[ComfyUI-Manager] All startup tasks have been completed."
-_TUNNEL_URL_RE = re.compile(r"http[s]?://[a-zA-Z0-9\-]+\.pinggy\.link")
+_TUNNEL_URL_RE = re.compile(r"https?://[a-zA-Z0-9][a-zA-Z0-9\-\.]+\.pinggy[\w\-]*\.link")
 
 
 def _say(msg: str) -> None:
@@ -266,8 +266,9 @@ def _start_tunnel() -> None:
         start_new_session=True,
     )
     for raw in cf.stdout:
-        m = _TUNNEL_URL_RE.search(raw.decode("utf-8", errors="replace"))
-        if m:
+        decoded = raw.decode("utf-8", errors="replace").strip()
+        m = _TUNNEL_URL_RE.search(decoded)
+        if m and decoded.startswith("https://"):
             url = m.group(0)
             print(f"\n\n  {'─' * 56}")
             print(f"  ready        {url}")
