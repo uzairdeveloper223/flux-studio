@@ -1,24 +1,34 @@
 # flux-studio
 
-One-command ComfyUI setup for FLUX.1-dev on Google Colab, with the Flux Super Realism LoRA pre-loaded.
+One-command ComfyUI setup for FLUX.1-dev on Google Colab and Kaggle, with the Flux Super Realism LoRA pre-loaded. The installer auto-detects which platform you're on.
 
-## Getting Started with Google Colab
+## Getting Started
+
+### Google Colab
 
 1. **Go to Colab:** Open [colab.research.google.com](https://colab.research.google.com/) and create a new notebook.
 2. **Enable the T4 GPU:** Go to **Runtime** → **Change runtime type**, select **T4 GPU** under Hardware accelerator, and click **Save**.
 3. **Open the terminal:** Look at the bottom left of your screen on desktop.
+4. **Run the command** below in the terminal.
 
-Run this command in the terminal:
+### Kaggle
+
+1. **Go to Kaggle:** Open [kaggle.com/code](https://www.kaggle.com/code) and create a new notebook.
+2. **Enable GPU:** In the right sidebar, go to **Settings** → **Accelerator** → select **GPU T4x2**.
+3. **Enable Internet:** In the same sidebar, toggle **Internet** to **ON** (required for downloads).
+4. **Add a code cell** and paste the command below, then run it.
+
+### The command
 
 ```bash
 bash <(wget -qO- https://raw.githubusercontent.com/uzairdeveloper223/flux-studio/main/install.sh)
 ```
 
-The script downloads `run_comfyui.py` and `workflow.json`, then starts ComfyUI. A Cloudflare public URL is printed when the server is ready.
+The script downloads the runner and workflow, then starts ComfyUI. A Cloudflare public URL is printed when the server is ready.
 
 ## How it works
 
-`run_comfyui.py` handles everything in sequence:
+The runner script handles everything in sequence:
 
 1. Clones or updates ComfyUI from the official repo
 2. Installs ComfyUI-Manager and ComfyUI-GGUF custom nodes
@@ -29,29 +39,33 @@ The script downloads `run_comfyui.py` and `workflow.json`, then starts ComfyUI. 
 
 The workflow uses a single LoRA (`strangerzonehf/Flux-Super-Realism-LoRA`) at 0.75 strength. Start prompts with `Super Realism, RAW photo` to activate it.
 
-## Requirements
+## Platform comparison
 
-- Google Colab with a T4 GPU (free tier works)
-- No other setup needed — the script installs everything
+| | Google Colab (free) | Kaggle (free) |
+|--|--|--|
+| GPU | 1x T4 (15.6 GB VRAM) | 2x T4 (16 GB each) |
+| RAM | ~12 GB | ~29 GB |
+| GPU quota | daily limit (varies) | 30 hours/week |
+| Internet | on by default | must enable manually |
+| Output path | `/content/ComfyUI/output/` | `/kaggle/working/ComfyUI/output/` |
 
-## Generated images
-
-Images are saved to `/content/ComfyUI/output/` during the session. Download them before the session ends — Colab does not persist `/content/` across sessions.
+Both platforms lose all files when the session ends. Download your images before disconnecting.
 
 ## Project structure
 
 ```
 flux-studio/
-├── install.sh        one-command installer
-├── run_comfyui.py    setup and launch script
-└── workflow.json     ComfyUI workflow with Super Realism LoRA
+├── install.sh              auto-detects Colab vs Kaggle
+├── run_comfyui.py          Colab runner
+├── run_comfyui_kaggle.py   Kaggle runner (internet check, dual-GPU handling)
+└── workflow.json           ComfyUI workflow with Super Realism LoRA
 ```
 
 ## Limitations
 
-- The free Colab T4 has 15.6 GB VRAM. Generation at 768×1024 takes roughly 30–60 seconds per image.
-- The session and all downloaded models are lost when Colab disconnects. The script re-downloads only what is missing on each run, but on a fresh session this means re-downloading ~14 GB.
-- Google Colab free-tier sessions idle-disconnect after about 90 minutes of inactivity.
+- Generation at 768x1024 takes roughly 30-60 seconds per image on a T4.
+- Models are ~14 GB total. On a fresh session they must be re-downloaded, which takes a few minutes.
+- Sessions idle-disconnect after about 90 minutes of inactivity (Colab) or when quota runs out (Kaggle).
 
 ## Author
 
