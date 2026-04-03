@@ -260,7 +260,7 @@ def _install_pinggy_deps() -> None:
 
 def _start_tunnel() -> None:
     cf = subprocess.Popen(
-        ["ssh", "-o", "StrictHostKeyChecking=no", "-p", "80", "-R0:localhost:" + str(COMFYUI_PORT), "a.pinggy.io"],
+        ["ssh", "-o", "StrictHostKeyChecking=no", "-o", "BatchMode=yes", "-p", "80", "-R0:localhost:" + str(COMFYUI_PORT), "a.pinggy.io"],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         start_new_session=True,
