@@ -73,8 +73,8 @@
             ],
             "properties": {"Node name for S&R": "LoraLoader"},
             "widgets_values": [
-                "super-realism.safetensors",
-                0.75,
+                "another_amateur_lora.safetensors",
+                1.0,
                 1
             ]
         },
@@ -98,7 +98,7 @@
             ],
             "properties": {"Node name for S&R": "CLIPTextEncode"},
             "widgets_values": [
-                "Super Realism, RAW photo, shot on Sony A7 III, 8K UHD, a stunning portrait with dramatic cinematic lighting"
+                "Low-resolution, amateur photo shot on digital camera, no visible jpeg artifacts, slightly noisy, a stunning portrait with dramatic cinematic lighting"
             ]
         },
         {
@@ -152,7 +152,7 @@
                 {"name": "SAMPLER", "type": "SAMPLER", "links": [5]}
             ],
             "properties": {"Node name for S&R": "KSamplerSelect"},
-            "widgets_values": ["euler"]
+            "widgets_values": ["dpmpp_2m"]
         },
         {
             "id": 7,
@@ -169,7 +169,7 @@
                 {"name": "SIGMAS", "type": "SIGMAS", "links": [6]}
             ],
             "properties": {"Node name for S&R": "BasicScheduler"},
-            "widgets_values": ["simple", 20, 1]
+            "widgets_values": ["beta", 40, 1]
         },
         {
             "id": 9,

@@ -40,15 +40,15 @@ _MODEL_SPECS: list[tuple[str, str, Path, str | None]] = [
         None,
     ),
     (
-        "LoRA — Flux Super Realism",
-        "https://huggingface.co/strangerzonehf/Flux-Super-Realism-LoRA/resolve/main/super-realism.safetensors",
+        "LoRA — UltraRealistic Amateur V2",
+        "https://civitai.com/api/download/models/890545?type=Model&format=SafeTensor",
         WORKSPACE / "models" / "loras",
-        "super-realism.safetensors",
+        "another_amateur_lora.safetensors",
     ),
 ]
 
 _WORKFLOW_MAP: dict[str, str] = {
-    "workflow.json": "flux_super_realism.json",
+    "workflow.json": "flux_ultra_realistic.json",
 }
 
 _SUPPRESS_PATTERNS: tuple[str, ...] = (
@@ -280,7 +280,7 @@ def _start_tunnel() -> None:
             url = m.group(0)
             print(f"\n\n  {'─' * 56}")
             print(f"  ready        {url}")
-            print(f"  workflow     Browse Workflows -> flux_super_realism")
+            print(f"  workflow     Browse Workflows -> flux_ultra_realistic")
             print(f"  output       {WORKSPACE / 'output' }/")
             print(f"  {'─' * 56}")
             print("  stop the session manually when done.\n")

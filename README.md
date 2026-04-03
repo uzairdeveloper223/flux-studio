@@ -1,6 +1,6 @@
 # flux-studio
 
-One-command ComfyUI setup for FLUX.1-dev on Google Colab and Kaggle, with the Flux Super Realism LoRA pre-loaded. The installer auto-detects which platform you're on.
+One-command ComfyUI setup for FLUX.1-dev on Google Colab and Kaggle, with the UltraRealistic Amateur V2 LoRA pre-loaded. The installer auto-detects which platform you're on.
 
 ## Getting Started
 
@@ -40,12 +40,12 @@ The runner script handles everything in sequence:
 
 1. Clones or updates ComfyUI from the official repo
 2. Installs ComfyUI-Manager and ComfyUI-GGUF custom nodes
-3. Downloads the FLUX.1-dev GGUF model (~9 GB), T5-XXL encoder (~4 GB), CLIP-L, VAE, and the Super Realism LoRA — skipping files already on disk
+3. Downloads the FLUX.1-dev GGUF model (~9 GB), T5-XXL encoder (~4 GB), CLIP-L, VAE, and the UltraRealistic Amateur V2 LoRA — skipping files already on disk
 4. Copies `workflow.json` into ComfyUI's workflow browser
 5. Starts a Cloudflare tunnel and prints the public URL
 6. Launches ComfyUI
 
-The workflow uses a single LoRA (`strangerzonehf/Flux-Super-Realism-LoRA`) at 0.75 strength. Start prompts with `Super Realism, RAW photo` to activate it.
+The workflow uses a single LoRA (`UltraRealistic Amateur V2` by Danrisi) at 1.0 strength. Start prompts with `Low-resolution, amateur photo shot on digital camera, no visible jpeg artifacts, slightly noisy` to activate it.
 
 ## Platform comparison
 
@@ -66,7 +66,7 @@ flux-studio/
 ├── install.sh              auto-detects Colab vs Kaggle
 ├── run_comfyui.py          Colab runner
 ├── run_comfyui_kaggle.py   Kaggle runner (internet check, dual-GPU handling)
-└── workflow.json           ComfyUI workflow with Super Realism LoRA
+└── workflow.json           ComfyUI workflow with UltraRealistic Amateur V2 LoRA
 ```
 
 ## Limitations

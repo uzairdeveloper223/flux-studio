@@ -38,15 +38,15 @@ _MODEL_SPECS: list[tuple[str, str, Path, str | None]] = [
         None,
     ),
     (
-        "LoRA — Flux Super Realism",
-        "https://huggingface.co/strangerzonehf/Flux-Super-Realism-LoRA/resolve/main/super-realism.safetensors",
+        "LoRA — UltraRealistic Amateur V2",
+        "https://civitai.com/api/download/models/890545?type=Model&format=SafeTensor",
         WORKSPACE / "models" / "loras",
-        "super-realism.safetensors",
+        "another_amateur_lora.safetensors",
     ),
 ]
 
 _WORKFLOW_MAP: dict[str, str] = {
-    "workflow.json": "flux_super_realism.json",
+    "workflow.json": "flux_ultra_realistic.json",
 }
 
 _SUPPRESS_PATTERNS: tuple[str, ...] = (
@@ -222,19 +222,23 @@ def _install_workflows(script_dir: Path) -> None:
 
 
 def _install_cloudflared() -> None:
-    if shutil.which("cloudflared"):
+    cf_bin = Path("/tmp/cloudflared")
+    if shutil.which("cloudflared") or cf_bin.exists():
         return
     _say("installing cloudflared ...")
-    _download(
-        "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb",
-        Path.home(),
+    subprocess.run(
+        f'wget -q -O {cf_bin} '
+        'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64',
+        shell=True, check=True,
     )
-    _run_silent(f"dpkg -i {Path.home() / 'cloudflared-linux-amd64.deb'}")
+    cf_bin.chmod(0o755)
+    _say("cloudflared ready")
 
 
 def _start_tunnel() -> None:
+    cf_bin = "/tmp/cloudflared" if Path("/tmp/cloudflared").exists() else "cloudflared"
     cf = subprocess.Popen(
-        ["cloudflared", "tunnel", "--url", f"http://127.0.0.1:{COMFYUI_PORT}"],
+        [cf_bin, "tunnel", "--url", f"http://127.0.0.1:{COMFYUI_PORT}"],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
     )
@@ -244,7 +248,7 @@ def _start_tunnel() -> None:
             url = m.group(0)
             print(f"\n\n  {'─' * 56}")
             print(f"  ready        {url}")
-            print(f"  workflow     Browse Workflows -> flux_super_realism")
+            print(f"  workflow     Browse Workflows -> flux_ultra_realistic")
             print(f"  output       /content/ComfyUI/output/")
             print(f"  {'─' * 56}")
             print("  Ctrl+C to stop.\n")
