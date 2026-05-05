@@ -16,13 +16,13 @@ COMFYUI_PORT = 8188
 
 _MODEL_SPECS: list[tuple[str, str, Path, str | None]] = [
     (
-        "FLUX.1-dev GGUF Q4_K_S (~9 GB)",
-        "https://huggingface.co/city96/FLUX.1-dev-gguf/resolve/main/flux1-dev-Q4_K_S.gguf",
+        "FLUX.1-dev GGUF Q5_K_S (~7.7 GB)",
+        "https://huggingface.co/city96/FLUX.1-dev-gguf/resolve/main/flux1-dev-Q5_K_S.gguf",
         WORKSPACE / "models" / "unet",
         None,
     ),
     (
-        "T5-XXL encoder Q4_K_S (~4 GB)",
+        "T5-XXL encoder Q4_K_S (~2.6 GB)",
         "https://huggingface.co/city96/t5-v1_1-xxl-encoder-gguf/resolve/main/t5-v1_1-xxl-encoder-Q4_K_S.gguf",
         WORKSPACE / "models" / "clip",
         None,

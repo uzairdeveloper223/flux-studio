@@ -20,7 +20,7 @@
                 }
             ],
             "properties": {"Node name for S&R": "UnetLoaderGGUF"},
-            "widgets_values": ["flux1-dev-Q4_K_S.gguf"]
+            "widgets_values": ["flux1-dev-Q5_K_S.gguf"]
         },
         {
             "id": 14,
