@@ -1,35 +1,40 @@
 # flux-studio
 
-One-command ComfyUI setup for FLUX.1-dev on Google Colab and Kaggle, with the UltraRealistic Amateur V2 LoRA pre-loaded. The installer auto-detects which platform you're on.
+One-command ComfyUI setup for **FLUX.1-dev** on Google Colab and Kaggle, with the **UltraRealistic Amateur V2** LoRA by [Danrisi](https://civitai.com/models/796382) pre-loaded and ready to generate.
 
-## Getting Started
+The installer auto-detects which platform you're on and handles everything — models, nodes, tunnels, the works.
+
+---
+
+## Quick Start
 
 ### Google Colab (Recommended)
 
-The easiest way to run Flux Studio is to use the pre-configured Colab notebook. It will automatically request a T4 GPU and setup the environment for you.
+Click the badge, wait for the tunnel URL, generate.
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/uzairdeveloper223/flux-studio/blob/main/flux-studio.ipynb)
 
+> Free T4 GPU · ~14 GB models downloaded on first run · Cloudflare tunnel for UI access
+
 <details>
-<summary><b>Kaggle (Click to expand)</b></summary>
+<summary><b>Kaggle setup (click to expand)</b></summary>
 <br>
 
-> **Warning:** Kaggle's automated systems are incredibly aggressive against UI tunneling. Even with anti-idle scripts, Kaggle will often abruptly kill your session completely immediately after you open the Cloudflare URL. Countless bypass methods have been tested and none reliably work. Use Google Colab instead if possible!
+> **Warning:** Kaggle aggressively kills UI tunnels. Sessions drop the moment you open the Cloudflare URL in many cases. **Use Colab if you can.** Kaggle is here as a fallback for when your Colab GPU quota runs out.
 
-1. Open [kaggle.com/code](https://www.kaggle.com/code) and create a new notebook.
-2. **Enable GPU:** Go to **Settings** → **Accelerator** → select **GPU T4x2**.
-3. **Enable Internet:** Toggle **Internet** to **ON** in the settings.
-4. **Run this command** in a code cell:
+1. Go to [kaggle.com/code](https://www.kaggle.com/code) → create a new notebook.
+2. **Settings → Accelerator → GPU T4x2**
+3. **Settings → Internet → ON**
+4. Run in a code cell:
 
 ```python
 !bash <(wget -qO- https://raw.githubusercontent.com/uzairdeveloper223/flux-studio/main/install.sh)
 ```
 
-5. **Stop Kaggle from disconnecting you:** Kaggle will pause the notebook if you are inactive. To prevent this, open your browser's Developer Console (F12 or Ctrl+Shift+I) and paste this script to fake mouse movements:
+5. Paste the keep-alive script in your browser console (F12) to stop Kaggle from disconnecting you:
 
 ```javascript
 function keepAlive() {
-    console.log("Keeping Kaggle alive...");
     let event = new KeyboardEvent('keydown', { key: 'Shift', code: 'ShiftLeft', bubbles: true });
     document.body.dispatchEvent(event);
     document.body.click();
@@ -37,66 +42,96 @@ function keepAlive() {
 setInterval(keepAlive, 20000);
 ```
 
-**Important:** Do not close the Kaggle tab while generating, or the server will stop!
+Keep the Kaggle tab open while generating — closing it kills the server.
 
 </details>
 
-The script downloads the runner and workflow, then starts ComfyUI. A Cloudflare (Colab) or Pinggy (Kaggle) public URL is printed when the server is ready.
+Once the server is up, a public URL is printed. Open it to access ComfyUI.
 
-## Gallery
-Here are some examples of what Flux Studio can generate right out of the box using the pre-loaded UltraRealistic LoRA. 
+---
 
-![IMAGE 1](assets/ComfyUI_00001_.png)
+## What Gets Installed
 
-![IMAGE 2](assets/ComfyUI_00002_.png)
+The runner handles everything in order:
 
-![IMAGE 3](assets/ComfyUI_00003_.png)
-
-## How it works
-
-The runner script handles everything in sequence:
-
-1. Clones or updates ComfyUI from the official repo
+1. Clones / updates ComfyUI from the official repo
 2. Installs ComfyUI-Manager and ComfyUI-GGUF custom nodes
-3. Downloads the FLUX.1-dev GGUF model (~9 GB), T5-XXL encoder (~4 GB), CLIP-L, VAE, and the UltraRealistic Amateur V2 LoRA — skipping files already on disk
+3. Downloads all required model files (skips anything already cached):
+   - FLUX.1-dev GGUF Q5_K_S — ~7.7 GB
+   - T5-XXL text encoder Q4_K_S — ~2.6 GB
+   - CLIP-L — ~246 MB
+   - VAE — ~335 MB
+   - UltraRealistic Amateur V2 LoRA — ~2 GB
 4. Copies `workflow.json` into ComfyUI's workflow browser
-5. Starts a Cloudflare or Pinggy tunnel and prints the public URL
+5. Starts a Cloudflare (Colab) or Pinggy (Kaggle) tunnel and prints the URL
 6. Launches ComfyUI
 
-The workflow uses a single LoRA (`UltraRealistic Amateur V2` by Danrisi) at 1.0 strength. Start prompts with `Low-resolution, amateur photo shot on digital camera, no visible jpeg artifacts, slightly noisy` to activate it.
+---
 
-## Platform comparison
+## Platform Comparison
 
 | | Google Colab (free) | Kaggle (free) |
-|--|--|--|
-| GPU | 1x T4 (15.6 GB VRAM) | 2x T4 (16 GB each) |
+|---|---|---|
+| GPU | 1× T4 (15.6 GB VRAM) | 2× T4 (16 GB each) |
 | RAM | ~12 GB | ~29 GB |
-| GPU quota | daily limit (varies) | 30 hours/week |
-| Internet | on by default | must enable manually |
+| Weekly GPU quota | Daily limit (varies) | 30 hrs/week |
+| Tunnel | Cloudflare (stable) | Pinggy (fragile) |
 | Output path | `/content/ComfyUI/output/` | `/kaggle/working/ComfyUI/output/` |
 
-Both platforms lose all files when the session ends. Download your images before disconnecting.
+Both platforms wipe all files when the session ends. Download your images before disconnecting.
 
-## Project structure
+---
+
+## The LoRA — UltraRealistic Amateur V2
+
+Made by **Danrisi**, trained on 1048 images spanning a wide range of quality gradations — from clean mobile shots to grainy digital camera photos. The V2 brings better anatomy (especially hands), improved stability, and the ability to dial in quality level purely through prompting rather than needing a wall of trigger words.
+
+The pre-loaded workflow uses the LoRA at **strength 1.0** with Danrisi's own recommended settings.
+
+For a full prompting guide — trigger phrases, quality tiers, sampler settings, and what to tweak when things go wrong — see [PROMPTING.md](./PROMPTING.md).
+
+---
+
+## Gallery
+
+Some examples generated out of the box with the pre-loaded workflow and no prompt changes.
+
+![Example 1](assets/ComfyUI_00001_.png)
+![Example 2](assets/ComfyUI_00002_.png)
+![Example 3](assets/ComfyUI_00003_.png)
+
+---
+
+## Project Structure
 
 ```
 flux-studio/
-├── install.sh              auto-detects Colab vs Kaggle
-├── run_comfyui.py          Colab runner
-├── run_comfyui_kaggle.py   Kaggle runner (internet check, dual-GPU handling)
-└── workflow.json           ComfyUI workflow with UltraRealistic Amateur V2 LoRA
+├── install.sh                  detects Colab vs Kaggle, fetches the right runner
+├── run_comfyui.py              Colab runner
+├── run_comfyui_kaggle.py       Kaggle runner (internet check, dual-GPU handling)
+├── workflow.json               ComfyUI workflow with UltraRealistic Amateur V2
+├── flux-studio.ipynb           Colab notebook (one-click)
+├── PROMPTING.md                Full prompting guide for the LoRA + FLUX
+└── assets/                     Gallery images
 ```
 
-## Limitations
+---
 
-- Generation at 768x1024 takes roughly 30-60 seconds per image on a T4.
-- Models are ~14 GB total. On a fresh session they must be re-downloaded, which takes a few minutes.
-- Sessions idle-disconnect after about 90 minutes of inactivity (Colab). On Kaggle, the connection uses Pinggy to evade Kaggle's Cloudflare ban, but you must keep the tab open.
+## Known Limitations
+
+- Generation at 768×1024 takes roughly 30–60 seconds per image on a T4.
+- Models are ~14 GB total. Fresh sessions re-download them — expect a few minutes on first run.
+- Colab sessions idle-disconnect after ~90 minutes of inactivity.
+- Complex lighting scenes and extreme poses can still produce anatomy issues — see PROMPTING.md for fixes.
+
+---
 
 ## Author
 
 Uzair Mughal — [uzair.is-a.dev](https://uzair.is-a.dev) — contact@uzair.is-a.dev
 
+LoRA by [Danrisi](https://civitai.com/models/796382) — support them on [Ko-fi](https://ko-fi.com/danrisi).
+
 ## License
 
-MIT
+MIT — see [LICENSE](./LICENSE)
