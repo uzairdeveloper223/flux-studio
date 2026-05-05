@@ -94,11 +94,9 @@ For a full prompting guide — trigger phrases, quality tiers, sampler settings,
 
 ## Gallery
 
-Some examples generated out of the box with the pre-loaded workflow and no prompt changes.
+8 images generated with the pre-loaded workflow across action and emotional open-field scenes — each with its full prompt.
 
-![Example 1](assets/ComfyUI_00001_.png)
-![Example 2](assets/ComfyUI_00002_.png)
-![Example 3](assets/ComfyUI_00003_.png)
+**[→ View Gallery](./GALLERY.md)**
 
 ---
 
